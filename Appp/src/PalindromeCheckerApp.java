@@ -1,108 +1,85 @@
 import java.util.*;
 
-// Step 1: Strategy Interface
-interface PalindromeStrategy {
-    boolean check(String input);
-}
+public class PalindromeCheckerApp {
 
-// Step 2: Stack-Based Strategy
-class StackStrategy implements PalindromeStrategy {
+    // 1️⃣ Two-Pointer Method
+    public static boolean twoPointerCheck(String input) {
+        String str = input.replaceAll("\\s+", "").toLowerCase();
+        int start = 0;
+        int end = str.length() - 1;
 
-    @Override
-    public boolean check(String input) {
+        while (start < end) {
+            if (str.charAt(start) != str.charAt(end)) {
+                return false;
+            }
+            start++;
+            end--;
+        }
+        return true;
+    }
 
-        String normalized = input.replaceAll("\\s+", "").toLowerCase();
+    // 2️⃣ Stack Method
+    public static boolean stackCheck(String input) {
+        String str = input.replaceAll("\\s+", "").toLowerCase();
         Stack<Character> stack = new Stack<>();
 
-        for (char ch : normalized.toCharArray()) {
+        for (char ch : str.toCharArray()) {
             stack.push(ch);
         }
 
-        for (char ch : normalized.toCharArray()) {
+        for (char ch : str.toCharArray()) {
             if (ch != stack.pop()) {
                 return false;
             }
         }
-
         return true;
     }
-}
 
-// Step 3: Deque-Based Strategy
-class DequeStrategy implements PalindromeStrategy {
-
-    @Override
-    public boolean check(String input) {
-
-        String normalized = input.replaceAll("\\s+", "").toLowerCase();
-        Deque<Character> deque = new ArrayDeque<>();
-
-        for (char ch : normalized.toCharArray()) {
-            deque.addLast(ch);
+    // 3️⃣ Recursive Method
+    public static boolean recursiveCheck(String str, int start, int end) {
+        if (start >= end) {
+            return true;
         }
-
-        while (deque.size() > 1) {
-            if (!deque.removeFirst().equals(deque.removeLast())) {
-                return false;
-            }
+        if (str.charAt(start) != str.charAt(end)) {
+            return false;
         }
-
-        return true;
+        return recursiveCheck(str, start + 1, end - 1);
     }
-}
-
-// Step 4: Context Class
-class PalindromeService {
-
-    private PalindromeStrategy strategy;
-
-    // Constructor Injection
-    public PalindromeService(PalindromeStrategy strategy) {
-        this.strategy = strategy;
-    }
-
-    public boolean execute(String input) {
-        return strategy.check(input);
-    }
-}
-
-// Step 5: Main Application
-public class git statusPalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== UC12: Strategy Pattern Palindrome Checker ===");
-        System.out.println("Choose Algorithm:");
-        System.out.println("1. Stack Strategy");
-        System.out.println("2. Deque Strategy");
-        System.out.print("Enter choice (1 or 2): ");
-
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // consume newline
-
+        System.out.println("=== UC13: Performance Comparison of Palindrome Algorithms ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        PalindromeStrategy strategy;
+        String normalized = input.replaceAll("\\s+", "").toLowerCase();
 
-        // Runtime Strategy Selection
-        if (choice == 1) {
-            strategy = new StackStrategy();
-        } else {
-            strategy = new DequeStrategy();
-        }
+        // 🔹 Two Pointer Timing
+        long start1 = System.nanoTime();
+        boolean result1 = twoPointerCheck(input);
+        long end1 = System.nanoTime();
 
-        PalindromeService service = new PalindromeService(strategy);
+        // 🔹 Stack Timing
+        long start2 = System.nanoTime();
+        boolean result2 = stackCheck(input);
+        long end2 = System.nanoTime();
 
-        boolean result = service.execute(input);
+        // 🔹 Recursive Timing
+        long start3 = System.nanoTime();
+        boolean result3 = recursiveCheck(normalized, 0, normalized.length() - 1);
+        long end3 = System.nanoTime();
 
-        if (result) {
-            System.out.println("Result: The string is a Palindrome.");
-        } else {
-            System.out.println("Result: The string is NOT a Palindrome.");
-        }
+        System.out.println("\n--- Results ---");
+        System.out.println("Two-Pointer Result: " + result1);
+        System.out.println("Execution Time: " + (end1 - start1) + " ns");
+
+        System.out.println("\nStack Method Result: " + result2);
+        System.out.println("Execution Time: " + (end2 - start2) + " ns");
+
+        System.out.println("\nRecursive Method Result: " + result3);
+        System.out.println("Execution Time: " + (end3 - start3) + " ns");
 
         scanner.close();
     }
