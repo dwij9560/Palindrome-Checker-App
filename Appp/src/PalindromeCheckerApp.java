@@ -9,30 +9,31 @@ public class PalindromeCheckerApp {
 
         Scanner scanner = new Scanner(System.in);
 
-        // Take input from user
+        System.out.println("=== UC6: Queue + Stack Based Palindrome Checker ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Create Stack (LIFO)
-        Stack<Character> stack = new Stack<>();
+        // Convert to lowercase and remove spaces
+        input = input.replaceAll("\\s+", "").toLowerCase();
 
-        // Create Queue (FIFO)
+        // Create Stack and Queue
+        Stack<Character> stack = new Stack<>();
         Queue<Character> queue = new LinkedList<>();
 
-        // Insert characters into both Stack and Queue
+        // Enqueue and Push characters
         for (int i = 0; i < input.length(); i++) {
             char ch = input.charAt(i);
-            stack.push(ch);     // LIFO
-            queue.add(ch);      // FIFO (Enqueue)
+            stack.push(ch);      // LIFO
+            queue.add(ch);       // FIFO
         }
 
         boolean isPalindrome = true;
 
-        // Compare Pop (Stack) and Dequeue (Queue)
-        for (int i = 0; i < input.length(); i++) {
+        // Compare dequeue and pop
+        while (!stack.isEmpty() && !queue.isEmpty()) {
 
             char fromStack = stack.pop();      // LIFO
-            char fromQueue = queue.remove();   // FIFO (Dequeue)
+            char fromQueue = queue.remove();  // FIFO
 
             if (fromStack != fromQueue) {
                 isPalindrome = false;
@@ -40,11 +41,11 @@ public class PalindromeCheckerApp {
             }
         }
 
-        // Print result
+        // Result
         if (isPalindrome) {
-            System.out.println("The given string is a Palindrome.");
+            System.out.println("Result: The string is a Palindrome.");
         } else {
-            System.out.println("The given string is NOT a Palindrome.");
+            System.out.println("Result: The string is NOT a Palindrome.");
         }
 
         scanner.close();
