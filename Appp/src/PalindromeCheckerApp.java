@@ -1,40 +1,36 @@
 import java.util.Scanner;
 
-public class git status
-        PalindromeCheckerApp {
-
-    // Recursive method to check palindrome
-    public static boolean isPalindrome(String str, int start, int end) {
-
-        // Base Condition 1: If start >= end, string is palindrome
-        if (start >= end) {
-            return true;
-        }
-
-        // If characters at start and end are not equal
-        if (str.charAt(start) != str.charAt(end)) {
-            return false;
-        }
-
-        // Recursive Call
-        return isPalindrome(str, start + 1, end - 1);
-    }
+public class PalindromeCheckerApp {
 
     public static void main(String[] args) {
 
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("=== UC9: Recursive Palindrome Checker ===");
+        System.out.println("=== UC10: Case-Insensitive & Space-Ignored Palindrome Checker ===");
         System.out.print("Enter a string: ");
         String input = scanner.nextLine();
 
-        // Preprocessing
-        input = input.replaceAll("\\s+", "").toLowerCase();
+        // Step 1: Normalize string
+        // Remove spaces and convert to lowercase
+        String normalized = input.replaceAll("\\s+", "").toLowerCase();
 
-        boolean result = isPalindrome(input, 0, input.length() - 1);
+        // Step 2: Apply palindrome logic using two-pointer technique
+        boolean isPalindrome = true;
+        int start = 0;
+        int end = normalized.length() - 1;
 
-        if (result) {
-            System.out.println("Result: The string is a Palindrome.");
+        while (start < end) {
+            if (normalized.charAt(start) != normalized.charAt(end)) {
+                isPalindrome = false;
+                break;
+            }
+            start++;
+            end--;
+        }
+
+        // Step 3: Display Result
+        if (isPalindrome) {
+            System.out.println("Result: The string is a Palindrome (ignoring case and spaces).");
         } else {
             System.out.println("Result: The string is NOT a Palindrome.");
         }
